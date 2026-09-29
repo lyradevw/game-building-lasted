@@ -1,1 +1,200 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============================================================
+   TEAM CHAOS — DESIGN SYSTEM & GLOBAL STYLES
+   Dark Gaming Theme: #080B18, #11152B, Deep Purple & Electric Blue
+   ============================================================ */
+
+:root {
+  --bg-dark: #080B18;
+  --bg-surface: #11152B;
+  --bg-card: rgba(17, 21, 43, 0.75);
+  --bg-card-hover: rgba(26, 32, 66, 0.85);
+  
+  --primary-purple: #7c3aed;
+  --primary-violet: #a855f7;
+  --electric-blue: #06b6d4;
+  --cyber-blue: #3b82f6;
+  --neon-cyan: #00f0ff;
+  --neon-gold: #f59e0b;
+  --neon-crimson: #ef4444;
+
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  --border-subtle: rgba(124, 58, 237, 0.25);
+  --border-glow: rgba(124, 58, 237, 0.5);
+  --glass-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Background animated gaming ambient */
+body::before {
+  content: '';
+  position: fixed;
+  top: -10%;
+  left: 20%;
+  width: 60vw;
+  height: 60vw;
+  max-width: 650px;
+  max-height: 650px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, rgba(6, 182, 212, 0.08) 50%, transparent 70%);
+  filter: blur(80px);
+  z-index: 0;
+  pointer-events: none;
+  animation: ambientFloat 14s ease-in-out infinite alternate;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -15%;
+  right: 15%;
+  width: 55vw;
+  height: 55vw;
+  max-width: 600px;
+  max-height: 600px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(236, 72, 153, 0.1) 50%, transparent 70%);
+  filter: blur(90px);
+  z-index: 0;
+  pointer-events: none;
+  animation: ambientFloat2 18s ease-in-out infinite alternate;
+}
+
+@keyframes ambientFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, 40px) scale(1.1); }
+  100% { transform: translate(-30px, 20px) scale(0.95); }
+}
+
+@keyframes ambientFloat2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, -30px) scale(1.15); }
+  100% { transform: translate(30px, -20px) scale(0.9); }
+}
+
+/* Subtle Cyberpunk Grid Overlay */
+.cyber-grid-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: 
+    linear-gradient(to right, rgba(124, 58, 237, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(124, 58, 237, 0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Typography Utilities */
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.4);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 58, 237, 0.8);
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--glass-glow);
+  border-radius: 16px;
+}
+
+/* Neon Text Glows */
+.glow-text-purple {
+  text-shadow: 0 0 16px rgba(168, 85, 247, 0.6);
+}
+
+.glow-text-cyan {
+  text-shadow: 0 0 16px rgba(6, 182, 212, 0.6);
+}
+
+.glow-text-gold {
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.7);
+}
+
+/* Pulsing Badge & Rings */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(124, 58, 237, 0.5), inset 0 0 10px rgba(124, 58, 237, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.8), inset 0 0 15px rgba(6, 182, 212, 0.5);
+  }
+}
+
+@keyframes specialDestinyFlame {
+  0% {
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.6), 0 0 50px rgba(245, 158, 11, 0.4);
+    border-color: rgba(245, 158, 11, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.9), 0 0 70px rgba(239, 68, 68, 0.7);
+    border-color: rgba(239, 68, 68, 1);
+  }
+  100% {
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.6), 0 0 50px rgba(245, 158, 11, 0.4);
+    border-color: rgba(245, 158, 11, 0.8);
+  }
+}
+
+@keyframes cardShuffleGlitch {
+  0% { transform: translateY(0px) rotate(0deg); filter: hue-rotate(0deg); }
+  25% { transform: translateY(-4px) rotate(-1.5deg); filter: brightness(1.2) hue-rotate(30deg); }
+  50% { transform: translateY(3px) rotate(1deg); filter: brightness(1.3) hue-rotate(-20deg); }
+  75% { transform: translateY(-2px) rotate(-0.5deg); filter: brightness(1.1) hue-rotate(15deg); }
+  100% { transform: translateY(0px) rotate(0deg); filter: hue-rotate(0deg); }
+}
+
+@keyframes cardRevealPop {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.92);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
