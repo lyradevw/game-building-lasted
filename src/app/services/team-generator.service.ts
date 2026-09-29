@@ -69,7 +69,10 @@ export class TeamGeneratorService {
    */
   public generateTeams(): { teams: Team[]; fixedTeamTriggered: boolean } {
     const fixedTriggered = this.shouldTriggerFixedTeam();
+    const fixedMemberIds = new Set(this.fixedTeamConfig.memberIds || ['m1', 'm2', 'm3']);
     const fixedMemberNames = new Set(this.fixedTeamConfig.members);
+    const isFixedMember = (m: Member) => fixedMemberIds.has(m.id) || fixedMemberNames.has(m.name);
+
     const specialPowerIds = this.fixedTeamConfig.superpowerIds || ['sp1', 'sp2', 'sp4', 'sp5'];
     const specialSuperpowers = SUPERPOWERS.filter(sp => specialPowerIds.includes(sp.id));
     const nonSpecialPowers = this.shuffle(SUPERPOWERS.filter(sp => !specialPowerIds.includes(sp.id)));
@@ -77,13 +80,12 @@ export class TeamGeneratorService {
     let generatedTeams: Team[] = [];
 
     if (fixedTriggered) {
-      // Find fixed members from current member list
-      const fixedMembers = this.currentMembers.filter(m => fixedMemberNames.has(m.name));
-      const remainingMembers = this.currentMembers.filter(m => !fixedMemberNames.has(m.name));
+      // Find fixed members (m1, m2, m3) from current member list
+      const fixedMembers = this.currentMembers.filter(isFixedMember);
+      const remainingMembers = this.currentMembers.filter(m => !isFixedMember(m));
 
-      // We have 3 fixed members forming 1 team of size 3
-      // Remaining 7 members are partitioned into 3 teams: sizes [3, 2, 2] in random order
-      const remainingSizes = this.shuffle([3, 2, 2]);
+      // Partition remaining members into teams of sizes 2 or 3
+      const remainingSizes = this.shuffle(this.getPartitionSizes(remainingMembers.length));
       const shuffledRemaining = this.shuffle(remainingMembers);
 
       const otherTeamsMembers: Member[][] = [];
@@ -93,7 +95,7 @@ export class TeamGeneratorService {
         cursor += size;
       }
 
-      // Special team receives all 4 special superpowers (sp1, sp2, sp4, sp5)!
+      // Special team (m1, m2, m3) receives all 4 special superpowers (sp1, sp2, sp4, sp5)!
       const specialTeam: Team = {
         id: 'team-destiny',
         teamNumber: 1,
@@ -109,17 +111,18 @@ export class TeamGeneratorService {
 
       const regularThemes = this.shuffle([...TEAM_THEMES]);
       const otherTeams: Team[] = otherTeamsMembers.map((teamMembers, idx) => {
+        const theme = regularThemes[idx % regularThemes.length];
         const power = nonSpecialPowers[idx % nonSpecialPowers.length];
         return {
           id: `team-${idx + 2}`,
           teamNumber: idx + 2,
           name: `TEAM 0${idx + 2}`,
-          badgeEmoji: regularThemes[idx % regularThemes.length].emoji,
+          badgeEmoji: theme.emoji,
           members: teamMembers,
           superpower: power,
           superpowers: [power],
           isSpecialTeam: false,
-          theme: regularThemes[idx % regularThemes.length]
+          theme
         };
       });
 
@@ -127,8 +130,7 @@ export class TeamGeneratorService {
 
     } else {
       // Pure random division
-      // Pick random permutation of [3, 3, 2, 2]
-      const teamSizes = this.shuffle([3, 3, 2, 2]);
+      const teamSizes = this.shuffle(this.getPartitionSizes(this.currentMembers.length));
       const shuffledMembers = this.shuffle(this.currentMembers);
       const regularThemes = this.shuffle([...TEAM_THEMES]);
       let cursor = 0;
@@ -139,8 +141,9 @@ export class TeamGeneratorService {
         cursor += size;
 
         // Check if all 3 fixed members happen to be together by chance
-        const hasAllFixed = size === 3 && fixedMemberNames.size === 3 &&
-          teamMembers.every(m => fixedMemberNames.has(m.name));
+        const hasAllFixed = size === 3 &&
+          fixedMemberIds.size === 3 &&
+          teamMembers.every(isFixedMember);
 
         const theme = hasAllFixed ? SPECIAL_TEAM_THEME : regularThemes[idx % regularThemes.length];
         const teamName = hasAllFixed ? this.fixedTeamConfig.teamName : `TEAM 0${idx + 1}`;
@@ -166,6 +169,30 @@ export class TeamGeneratorService {
       teams: generatedTeams,
       fixedTeamTriggered: actualFixedSelected
     };
+  }
+
+  /**
+   * Helper to partition any count into teams of size 2 and 3
+   */
+  private getPartitionSizes(count: number): number[] {
+    const sizes: number[] = [];
+    let remaining = count;
+    while (remaining > 0) {
+      if (remaining === 4) {
+        sizes.push(2, 2);
+        break;
+      } else if (remaining === 2) {
+        sizes.push(2);
+        break;
+      } else if (remaining >= 3) {
+        sizes.push(3);
+        remaining -= 3;
+      } else {
+        sizes.push(2);
+        break;
+      }
+    }
+    return sizes;
   }
 
   /**

@@ -12,6 +12,7 @@ import { FixedTeamConfig } from '../models/game.model';
  * - members: Danh sách 3 thành viên cố định
  */
 export const DEFAULT_FIXED_TEAM_CONFIG: FixedTeamConfig = {
+  memberIds: ['m1', 'm2', 'm3'],
   members: [
     'Phụng Lê 2000',
     'Linh Trần 2001',
@@ -19,9 +20,9 @@ export const DEFAULT_FIXED_TEAM_CONFIG: FixedTeamConfig = {
   ],
   teamName: '🔥 TEAM ĐỊNH MỆNH',
   subtitle: 'Tam Hảo Tụ Nghĩa • Kiếp Này Khó Trốn',
-  mode: 'chance', // Có thể chuyển thành 'guaranteed' hoặc 'off'
-  chancePercentage: 50, // 50% cơ hội xuất hiện
+  mode: 'guaranteed', // Gán cứng mặc định theo yêu cầu của user
+  chancePercentage: 100, // Luôn luôn xuất hiện 100%
   dramaticQuote: '🚨 ĐỊNH MỆNH ĐÃ AN BÀI 🚨\nBa người này KHÔNG THỂ THOÁT KHỎI NHAU!',
-  superpowerIds: ['sp1', 'sp2', 'sp4', 'sp5'] // Đặc quyền hưởng trọn 4 siêu năng lực
+  superpowerIds: ['sp1', 'sp2', 'sp4', 'sp5'] // 4 siêu năng lực mặc định: Hồi Sinh, Đóng Băng, Bất Tử, Tốc Biến
 };
 

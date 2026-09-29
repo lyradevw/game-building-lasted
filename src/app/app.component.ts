@@ -78,8 +78,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.fixedMemberNames = new Set(this.generator.config.members);
   }
 
-  get isSpecialTrio(): (name: string) => boolean {
-    return (name: string) => this.fixedMemberNames.has(name);
+  get isSpecialTrio(): (item: Member | string) => boolean {
+    const fixedMemberIds = new Set(this.generator.config.memberIds || ['m1', 'm2', 'm3']);
+    return (item: Member | string) => {
+      if (typeof item === 'string') {
+        return this.fixedMemberNames.has(item) || fixedMemberIds.has(item);
+      }
+      return fixedMemberIds.has(item.id) || this.fixedMemberNames.has(item.name);
+    };
   }
 
   get isIdle(): boolean {

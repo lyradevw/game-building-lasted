@@ -14,19 +14,16 @@ describe('Team Chaos & TeamGeneratorService Tests', () => {
     generator = TestBed.inject(TeamGeneratorService);
   });
 
-  it('should initialize with exactly 10 members', () => {
-    expect(generator.members.length).toBe(10);
-    const names = generator.members.map(m => m.name);
-    expect(names).toContain('Phụng Lê 2000');
-    expect(names).toContain('Linh Trần 2001');
-    expect(names).toContain('Xuân Đào 2002');
-    expect(names).toContain('Kẽm Gai 2003');
-    expect(names).toContain('Ngọc Ngà 2004');
-    expect(names).toContain('Minh Phi 2004');
-    expect(names).toContain('Mỹ Xuyến 2007');
-    expect(names).toContain('Mỹ Tiên 2003');
-    expect(names).toContain('Bác sĩ Thư');
-    expect(names).toContain('Chị Bích');
+  it('should initialize with members and guaranteed default mode for m1, m2, m3 with sp1, sp2, sp4, sp5', () => {
+    expect(generator.members.length).toBeGreaterThanOrEqual(10);
+    expect(generator.config.mode).toBe('guaranteed');
+    expect(generator.config.memberIds).toEqual(['m1', 'm2', 'm3']);
+    expect(generator.config.superpowerIds).toEqual(['sp1', 'sp2', 'sp4', 'sp5']);
+
+    const ids = generator.members.map(m => m.id);
+    expect(ids).toContain('m1');
+    expect(ids).toContain('m2');
+    expect(ids).toContain('m3');
   });
 
   it('should generate teams where each team has 2 or 3 members across 100 iterations', () => {
@@ -42,9 +39,9 @@ describe('Team Chaos & TeamGeneratorService Tests', () => {
         allAssigned = allAssigned.concat(team.members.map(m => m.name));
       });
 
-      expect(allAssigned.length).toBe(10);
+      expect(allAssigned.length).toBe(generator.members.length);
       const uniqueNames = new Set(allAssigned);
-      expect(uniqueNames.size).toBe(10);
+      expect(uniqueNames.size).toBe(generator.members.length);
     }
   });
 
@@ -104,7 +101,7 @@ describe('Team Chaos & TeamGeneratorService Tests', () => {
 
     expect(compiled.querySelector('.hero-title')?.textContent).toContain("WHO'S YOUR");
     const memberCards = compiled.querySelectorAll('app-member-card');
-    expect(memberCards.length).toBe(10);
+    expect(memberCards.length).toBe(fixture.componentInstance.members.length);
 
     const randomBtn = compiled.querySelector('.huge-random-btn') as HTMLButtonElement;
     expect(randomBtn).toBeTruthy();

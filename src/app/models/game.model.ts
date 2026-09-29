@@ -41,6 +41,7 @@ export interface Team {
 export type FixedTeamMode = 'guaranteed' | 'chance' | 'off';
 
 export interface FixedTeamConfig {
+  memberIds?: string[];
   members: string[];
   teamName: string;
   subtitle: string;
